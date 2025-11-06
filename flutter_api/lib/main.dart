@@ -11,7 +11,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Movie Explorer',
+      title: 'Cine World',
       debugShowCheckedModeBanner: false,
       theme: ThemeData.light(useMaterial3: true),
       home: const MovieListScreen(),
