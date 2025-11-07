@@ -1,7 +1,7 @@
-import 'tmdb_api.dart';
+import 'movie_api.dart';
 
 class SearchService {
-  final TMDBApi api = TMDBApi();
+  final MovieApi api = MovieApi();
 
   /// Searches movies based on a query string
   Future<Map<String, dynamic>> searchMovies(String query) async {

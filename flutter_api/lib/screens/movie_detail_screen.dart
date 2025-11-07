@@ -1,77 +1,116 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import '../utils/constants.dart';
-import '../styles/rich_text.dart';
+import '../services/movie_api.dart';
 
-class MovieDetailScreen extends StatelessWidget {
-  final dynamic movie;
+class MovieDetailScreen extends StatefulWidget {
+  final int movieId;
+  const MovieDetailScreen({super.key, required this.movieId});
 
-  const MovieDetailScreen({
-    super.key,
-    required this.movie,
-  });
+  @override
+  State<MovieDetailScreen> createState() => _MovieDetailScreenState();
+}
+
+class _MovieDetailScreenState extends State<MovieDetailScreen> {
+  final MovieApi api = MovieApi();
+  Map<String, dynamic>? movie;
+  bool isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    loadMovie();
+  }
+
+  Future<void> loadMovie() async {
+    try {
+      final data = await api.getMovieById(widget.movieId);
+      setState(() {
+        movie = data;
+      });
+    } finally {
+      setState(() => isLoading = false);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    final imageUrl = '${ApiConstants.imageBaseUrl}${movie['poster_path']}';
+    if (isLoading) {
+      return const Scaffold(
+        body: Center(child: CircularProgressIndicator()),
+      );
+    }
+
+    if (movie == null) {
+      return const Scaffold(
+        body: Center(child: Text('Movie not found')),
+      );
+    }
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(movie['title'] ?? 'Movie Details'),
+        title: Text(movie!['title']),
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(20.0),
+        padding: const EdgeInsets.all(20),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // LEFT SIDE — IMAGE
+            // IMAGE
             Expanded(
               flex: 1,
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(10),
                 child: CachedNetworkImage(
-                  imageUrl: imageUrl,
+                  imageUrl: movie!['imageUrl'],
                   fit: BoxFit.cover,
                 ),
               ),
             ),
+            const SizedBox(width: 30),
 
-            const SizedBox(width: 50),
-
-            // RIGHT SIDE — MOVIE DETAILS
+            // DETAILS
             Expanded(
               flex: 2,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  InfoText(
-                    label: "Title",
-                    value: movie['title'] ?? 'Movie Details',
-                    fontSize: 22,
-                  ),
+                  infoText('Title', movie!['title']),
+                  infoText('Director', movie!['director']),
+                  infoText('Lead Actor', movie!['leadActor']),
+                  infoText('Lead Actress', movie!['leadActress']),
+                  infoText('Supporting Actors', movie!['supportingActors']),
+                  infoText('Genres', movie!['genres']),
+                  infoText('Language', movie!['language']),
+                  infoText('Release Date', movie!['releaseDate']),
+                  infoText('Rating', movie!['audienceRating'].toString()),
+                  infoText('Audience Count', movie!['audienceCount'].toString()),
+                  infoText('Runtime', '${movie!['runtimeMinutes']} min'),
+                  infoText('Period', movie!['period']),
                   const SizedBox(height: 20),
-
-                  InfoText(
-                    label: "Rating",
-                    value: movie['vote_average'].toString(),
+                  const Text(
+                    'Story Line:',
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
                   ),
-                  const SizedBox(height: 20),
-
-                  InfoText(
-                    label: "Release Date",
-                    value: movie['release_date'] ?? 'Unknown',
-                  ),
-                  const SizedBox(height: 20),
-
-                  // OVERVIEW
-                  InfoText(
-                    label: "Overview",
-                    value: movie['overview'] ?? 'No description available.',
-                  ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 8),
+                  Text(movie!['storyLine']),
                 ],
               ),
             ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget infoText(String label, String? value) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4),
+      child: RichText(
+        text: TextSpan(
+          style: const TextStyle(color: Colors.black, fontSize: 16),
+          children: [
+            TextSpan(text: '$label: ', style: const TextStyle(fontWeight: FontWeight.bold)),
+            TextSpan(text: value ?? 'N/A'),
           ],
         ),
       ),

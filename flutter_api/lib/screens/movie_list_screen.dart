@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../services/tmdb_api.dart';
+import '../services/movie_api.dart';
 import '../widgets/movie_card.dart';
 import '../widgets/search_appbar.dart';
 import 'movie_detail_screen.dart';
@@ -12,7 +12,7 @@ class MovieListScreen extends StatefulWidget {
 }
 
 class _MovieListScreenState extends State<MovieListScreen> {
-  final TMDBApi api = TMDBApi();
+  final MovieApi api = MovieApi();
   final ScrollController _scrollController = ScrollController();
   final TextEditingController _searchController = TextEditingController();
 
@@ -29,14 +29,14 @@ class _MovieListScreenState extends State<MovieListScreen> {
     loadMovies();
   }
 
-  Future<void> loadMovies({int page = 1}) async {
+  Future<void> loadMovies({int pageNumber = 1}) async {
     setState(() => isLoading = true);
     try {
-      final data = await api.getPopularMovies(page: page);
+      final data = await api.getMovies(pageNumber: pageNumber);
       setState(() {
-        movies = data['results'];
-        totalPages = data['total_pages'] ?? 1;
-        currentPage = page;
+        movies = data['movies'];
+        totalPages = data['totalPages'] ?? 1;
+        currentPage = data['pageNumber'] ?? 1;
         isSearching = false;
       });
       _scrollController.jumpTo(0);
@@ -45,7 +45,7 @@ class _MovieListScreenState extends State<MovieListScreen> {
     }
   }
 
-  Future<void> searchMovies(String query, {int page = 1}) async {
+  Future<void> searchMovies(String query, {int pageNumber = 1}) async {
     if (query.trim().isEmpty) {
       loadMovies();
       return;
@@ -58,11 +58,11 @@ class _MovieListScreenState extends State<MovieListScreen> {
     });
 
     try {
-      final data = await api.searchMovies(query, page: page);
+      final data = await api.searchMovies(query, pageNumber: pageNumber);
       setState(() {
-        movies = data['results'];
-        totalPages = data['total_pages'] ?? 1;
-        currentPage = page;
+        movies = data['movies'];
+        totalPages = data['totalPages'] ?? 1;
+        currentPage = data['pageNumber'] ?? 1;
       });
       _scrollController.jumpTo(0);
     } finally {
@@ -72,7 +72,7 @@ class _MovieListScreenState extends State<MovieListScreen> {
 
   void goToPage(int page) {
     if (page < 1 || page > totalPages) return;
-    isSearching ? searchMovies(searchQuery, page: page) : loadMovies(page: page);
+    isSearching ? searchMovies(searchQuery, pageNumber: page) : loadMovies(pageNumber: page);
   }
 
   @override
@@ -99,11 +99,13 @@ class _MovieListScreenState extends State<MovieListScreen> {
                       movie: movie,
                       onTap: () => Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (_) => MovieDetailScreen(movie: movie)),
+                        MaterialPageRoute(builder: (_) => MovieDetailScreen(movieId: movie['id'])),
                       ),
                     );
                   },
                 ),
+
+                // Pagination controls
                 Align(
                   alignment: Alignment.centerLeft,
                   child: IconButton(

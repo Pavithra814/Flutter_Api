@@ -1,5 +1,6 @@
 // widgets/search_appbar.dart
 import 'package:flutter/material.dart';
+// import '../screens/auth_service.dart';
 
 class SearchAppBar extends StatelessWidget implements PreferredSizeWidget {
   final TextEditingController controller;
@@ -56,6 +57,17 @@ class SearchAppBar extends StatelessWidget implements PreferredSizeWidget {
               },
             ),
           ),
+
+  //         IconButton(
+  //   icon: const Icon(Icons.login),
+  //   tooltip: 'Login (optional)',
+  //   onPressed: () {
+  //     Navigator.push(
+  //       context,
+  //       MaterialPageRoute(builder: (_) => const AuthScreen()),
+  //     );
+  //   },
+  // ),
         ],
       ),
     );

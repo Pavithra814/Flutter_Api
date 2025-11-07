@@ -1,20 +1,28 @@
 import 'package:flutter/material.dart';
-import 'screens/movie_list_screen.dart';
+import 'screens/splash_screen.dart';
+import 'screens/login _screen .dart';
+import 'screens/register_screen.dart';
+// import 'screens/home_screen.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(const CineWorldApp());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class CineWorldApp extends StatelessWidget {
+  const CineWorldApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Cine World',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData.light(useMaterial3: true),
-      home: const MovieListScreen(),
+      theme: ThemeData.light(),
+      home: const SplashScreen(),
+      routes: {
+        '/login': (_) => const LoginScreen(),
+        '/register': (_) => const RegisterScreen(),
+        // '/home': (_) => const HomeScreen(),
+      },
     );
   }
 }

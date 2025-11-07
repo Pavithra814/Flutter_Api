@@ -1,7 +1,5 @@
-// widgets/movie_card.dart
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import '../utils/constants.dart';
 
 class MovieCard extends StatelessWidget {
   final dynamic movie;
@@ -11,14 +9,12 @@ class MovieCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final imageUrl = '${ApiConstants.imageBaseUrl}${movie['poster_path']}';
+    final imageUrl = movie['imageUrl'];
     return GestureDetector(
       onTap: onTap,
       child: Card(
         color: Colors.grey[900],
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
         child: Column(
           children: [
             Expanded(
@@ -28,24 +24,29 @@ class MovieCard extends StatelessWidget {
                   imageUrl: imageUrl,
                   width: double.infinity,
                   fit: BoxFit.cover,
-                  placeholder: (context, url) => const Center(
-                    child: CircularProgressIndicator(strokeWidth: 2),
-                  ),
+                  placeholder: (context, url) =>
+                      const Center(child: CircularProgressIndicator(strokeWidth: 2)),
                   errorWidget: (context, url, error) => const Icon(Icons.broken_image),
                 ),
               ),
             ),
             Padding(
               padding: const EdgeInsets.all(5.0),
-              child: Text(
-                movie['title'] ?? '',
-                style: const TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                ),
-                overflow: TextOverflow.ellipsis,
-                textAlign: TextAlign.center,
+              child: Column(
+                children: [
+                  Text(
+                    movie['title'] ?? '',
+                    style: const TextStyle(
+                        fontSize: 14, fontWeight: FontWeight.bold, color: Colors.white),
+                    overflow: TextOverflow.ellipsis,
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    ' ${movie['releaseDate']}',
+                    style: const TextStyle(color: Colors.white70, fontSize: 12),
+                  ),
+                ],
               ),
             ),
           ],
