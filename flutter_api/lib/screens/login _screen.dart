@@ -2,30 +2,23 @@ import 'package:flutter/material.dart';
 import '../services/auth_api.dart';
 import '../services/session_manager.dart';
 import 'movie_list_screen.dart';
-import 'login _screen.dart';
+import 'register_screen.dart';
 
-class RegisterScreen extends StatefulWidget {
-  const RegisterScreen({super.key});
+class LoginScreen extends StatefulWidget {
+  const LoginScreen({super.key});
 
   @override
-  State<RegisterScreen> createState() => _RegisterScreenState();
+  State<LoginScreen> createState() => _LoginScreenState();
 }
 
-class _RegisterScreenState extends State<RegisterScreen> {
-  final nameCtrl = TextEditingController();
+class _LoginScreenState extends State<LoginScreen> {
   final emailCtrl = TextEditingController();
-  final passCtrl = TextEditingController();
-  final confirmCtrl = TextEditingController();
+  final passwordCtrl = TextEditingController();
   bool loading = false;
 
-  void register() async {
+  void login() async {
     setState(() => loading = true);
-    final user = await AuthApi.register(
-      nameCtrl.text,
-      emailCtrl.text,
-      passCtrl.text,
-      confirmCtrl.text,
-    );
+    final user = await AuthApi.login(emailCtrl.text, passwordCtrl.text);
     setState(() => loading = false);
 
     if (user != null) {
@@ -35,9 +28,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
         MaterialPageRoute(builder: (_) => const MovieListScreen()),
       );
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Registration failed')),
-      );
+      ScaffoldMessenger.of(context)
+          .showSnackBar(const SnackBar(content: Text('Invalid credentials')));
     }
   }
 
@@ -52,22 +44,22 @@ class _RegisterScreenState extends State<RegisterScreen> {
       ),
         elevation: 1,
         title: const Text(
-          'Register Page',
+          'Login Page',
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
         actions: [
           IconButton(
             icon: const Icon(Icons.home, color: Colors.white, size: 40),
             onPressed: () {
-            Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (_) => const MovieListScreen()),
-             );
-            },   
+              Navigator.pop(
+                context,
+              );
+            },
           ),
         ],
       ),
 
+      // ✅ Light background
       backgroundColor: const Color(0xFFF7F9FC),
 
       body: Center(
@@ -75,7 +67,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Row(
             children: [
-              // LEFT QUOTES
+              // LEFT — QUOTES
               Expanded(
                 flex: 1,
                 child: Center(
@@ -83,17 +75,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     mainAxisSize: MainAxisSize.min,
                     children: const [
                       Text(
-                        "Join Us,",
+                        "Welcome back,",
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           color: Color(0xFF2A2A2A),
                           fontSize: 36,
                           fontWeight: FontWeight.bold,
-                        ),  
+                        ),
                       ),
                       SizedBox(height: 12),
                       Text(
-                        "\"Discover amazing movies\nand share your favorites.\"",
+                        "\"Movies touch our hearts\nand awaken our vision.\"",
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           color: Color(0xFF636363),
@@ -106,7 +98,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 ),
               ),
 
-              // RIGHT FORM
+              // RIGHT — Login FORM
               Expanded(
                 flex: 1,
                 child: Center(
@@ -117,7 +109,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       borderRadius: BorderRadius.circular(12),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black12,
+                          color: Colors.black12.withValues(alpha: 0.1),
                           blurRadius: 12,
                           offset: const Offset(0, 4),
                         ),
@@ -130,7 +122,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
                           const Text(
-                            "Sign up",
+                            "Sign in",
                             textAlign: TextAlign.left,
                             style: TextStyle(
                               fontSize: 26,
@@ -141,38 +133,60 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
                           const SizedBox(height: 30),
 
-                          // NAME
-                          TextField(
-                            controller: nameCtrl,
-                            decoration: _inputStyle("Name"),
-                          ),
-                          const SizedBox(height: 16),
-
                           // EMAIL
                           TextField(
                             controller: emailCtrl,
-                            decoration: _inputStyle("Email"),
+                            style: const TextStyle(color: Colors.black),
+                            decoration: InputDecoration(
+                              labelText: 'Email',
+                              labelStyle: const TextStyle(color: Colors.black54),
+                              enabledBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                    color: Colors.grey.shade400, width: 1),
+                              ),
+                              focusedBorder: const OutlineInputBorder(
+                                borderSide:
+                                    BorderSide(color: Color.fromARGB(255, 16, 17, 21), width: 1.6),
+                              ),
+                            ),
                           ),
+
                           const SizedBox(height: 16),
 
                           // PASSWORD
                           TextField(
-                            controller: passCtrl,
+                            controller: passwordCtrl,
                             obscureText: true,
-                            decoration: _inputStyle("Password"),
+                            style: const TextStyle(color: Colors.black),
+                            decoration: InputDecoration(
+                              labelText: 'Password',
+                              labelStyle: const TextStyle(color: Colors.black54),
+                              enabledBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                    color: Colors.grey.shade400, width: 1),
+                              ),
+                              focusedBorder: const OutlineInputBorder(
+                                borderSide:
+                                    BorderSide(color: Color.fromARGB(255, 2, 2, 3), width: 1.6),
+                              ),
+                            ),
                           ),
-                          const SizedBox(height: 16),
 
-                          // CONFIRM PASSWORD
-                          TextField(
-                            controller: confirmCtrl,
-                            obscureText: true,
-                            decoration: _inputStyle("Confirm Password"),
+                          const SizedBox(height: 14),
+                          Align(
+                            alignment: Alignment.centerRight,
+                            child: Text(
+                              "Forgot password?",
+                              style: TextStyle(
+                                color: Colors.blueGrey.shade600,
+                                fontSize: 14,
+                              ),
+                            ),
                           ),
 
                           const SizedBox(height: 20),
 
-                          // REGISTER BUTTON
+                          // LOGIN BUTTON
                           loading
                               ? const Center(child: CircularProgressIndicator())
                               : Container(
@@ -191,13 +205,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                     color: Colors.transparent,
                                     child: InkWell(
                                       borderRadius: BorderRadius.circular(8),
-                                      onTap: register,
+                                      onTap: login,
                                       child: Container(
                                         alignment: Alignment.center,
-                                        padding: const EdgeInsets.symmetric(
-                                            vertical: 14),
+                                        padding:
+                                            const EdgeInsets.symmetric(vertical: 14),
                                         child: const Text(
-                                          "Register",
+                                          "Sign In",
                                           style: TextStyle(
                                             fontSize: 18,
                                             color: Colors.white,
@@ -210,23 +224,23 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
                           const SizedBox(height: 16),
 
-                          // SIGN IN
+                          // REGISTER
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               const Text(
-                                "Already have an account?",
+                                "Don't have an account?",
                                 style: TextStyle(color: Colors.black54),
                               ),
                               TextButton(
                                 onPressed: () => Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (_) => const LoginScreen(),
+                                    builder: (_) => const RegisterScreen(),
                                   ),
                                 ),
                                 child: const Text(
-                                  "Sign in",
+                                  "Sign up",
                                   style: TextStyle(
                                     color: Color.fromARGB(255, 5, 5, 6),
                                   ),
@@ -243,19 +257,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
             ],
           ),
         ),
-      ),
-    );
-  }
-
-  InputDecoration _inputStyle(String label) {
-    return InputDecoration(
-      labelText: label,
-      labelStyle: const TextStyle(color: Colors.black54),
-      enabledBorder: OutlineInputBorder(
-        borderSide: BorderSide(color: Colors.grey.shade400, width: 1),
-      ),
-      focusedBorder: const OutlineInputBorder(
-        borderSide: BorderSide(color: Colors.black, width: 1.6),
       ),
     );
   }

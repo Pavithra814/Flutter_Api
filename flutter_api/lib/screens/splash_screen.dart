@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'login _screen .dart'; 
+// import 'login _screeny.dart'; // existing file
+import 'movie_list_screen.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -36,7 +37,7 @@ class _SplashScreenState extends State<SplashScreen>
     Future.delayed(const Duration(seconds: 3), () {
       Navigator.of(context).pushReplacement(PageRouteBuilder(
         transitionDuration: const Duration(milliseconds: 800),
-        pageBuilder: (_, __, ___) => const LoginScreen(),
+        pageBuilder: (_, __, ___) => const MovieListScreen(),
         transitionsBuilder: (_, animation, __, child) {
           return FadeTransition(opacity: animation, child: child);
         },

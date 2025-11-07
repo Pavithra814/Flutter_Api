@@ -78,7 +78,7 @@ class _MovieListScreenState extends State<MovieListScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: SearchAppBar(controller: _searchController, onSearch: searchMovies),
+      appBar: SearchAppBar(controller: _searchController, onSearch: searchMovies,showBackButton: false  ),
       body: isLoading && movies.isEmpty
           ? const Center(child: CircularProgressIndicator())
           : Stack(
