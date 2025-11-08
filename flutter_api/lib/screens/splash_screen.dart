@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-// import 'login _screeny.dart'; // existing file
 import 'movie_list_screen.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -54,7 +53,7 @@ class _SplashScreenState extends State<SplashScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 173, 168, 168),
+      backgroundColor: const Color.fromARGB(255, 255, 255, 255),
       body: Center(
         child: FadeTransition(
           opacity: _fadeIn,
@@ -63,7 +62,7 @@ class _SplashScreenState extends State<SplashScreen>
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: const [
-                Icon(Icons.movie,
+                Icon(Icons.movie_creation_rounded,
                     color: Colors.black, size: 90),
                 SizedBox(height: 20),
                 Text(

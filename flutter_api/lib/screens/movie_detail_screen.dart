@@ -48,8 +48,14 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(movie!['title']),
-      ),
+  backgroundColor: Colors.black,
+  iconTheme: const IconThemeData(color: Colors.white),
+  title: Text(
+    movie!['title'],
+    style: const TextStyle(color: Colors.white),
+  ),
+),
+
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20),
         child: Row(
