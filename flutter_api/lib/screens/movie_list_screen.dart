@@ -118,6 +118,7 @@ class _MovieListScreenState extends State<MovieListScreen> {
                     icon: const Icon(Icons.arrow_back_ios_new_rounded),
                   ),
                 ),
+                
                 Align(
                   alignment: Alignment.centerRight,
                   child: IconButton(

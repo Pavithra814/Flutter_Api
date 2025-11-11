@@ -25,4 +25,4 @@ class CineWorldApp extends StatelessWidget {
       },
     );
   }
-}
+}                 

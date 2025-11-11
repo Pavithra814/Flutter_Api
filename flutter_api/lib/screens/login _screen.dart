@@ -19,10 +19,7 @@ class _LoginScreenState extends State<LoginScreen> {
   bool loading = false;
 
   void login() async {
-    // ✅ Validate form first
-    if (!_formKey.currentState!.validate()) {
-      return;
-    }
+    if (!_formKey.currentState!.validate()) return;
 
     setState(() => loading = true);
     final user = await AuthApi.login(emailCtrl.text.trim(), passwordCtrl.text.trim());
@@ -57,13 +54,10 @@ class _LoginScreenState extends State<LoginScreen> {
         actions: [
           IconButton(
             icon: const Icon(Icons.home, color: Colors.white, size: 40),
-            onPressed: () {
-              Navigator.pop(context);
-            },
+            onPressed: () => Navigator.pop(context),
           ),
         ],
       ),
-
       backgroundColor: const Color(0xFFF7F9FC),
 
       body: Center(
@@ -71,40 +65,34 @@ class _LoginScreenState extends State<LoginScreen> {
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Row(
             children: [
-              // LEFT
+              // LEFT - Image Grid
               Expanded(
-                flex: 1,
-                child: Center(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: const [
-                      Text(
-                        "Welcome back,",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          color: Color(0xFF2A2A2A),
-                          fontSize: 36,
-                          fontWeight: FontWeight.bold,
+                flex: 3,
+                child: Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: GridView.builder(
+                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 3,
+                      crossAxisSpacing: 10,
+                      mainAxisSpacing: 10,
+                    ),
+                    itemCount: moviePosters.length,
+                    itemBuilder: (context, index) {
+                      return ClipRRect(
+                        borderRadius: BorderRadius.circular(10),
+                        child: Image.network(
+                          moviePosters[index],
+                          fit: BoxFit.cover,
                         ),
-                      ),
-                      SizedBox(height: 12),
-                      Text(
-                        "\"Movies touch our hearts\nand awaken our vision.\"",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          color: Color(0xFF636363),
-                          fontSize: 20,
-                          height: 1.3,
-                        ),
-                      ),
-                    ],
+                      );
+                    },
                   ),
                 ),
               ),
 
-              // RIGHT
+              // RIGHT - Login Form
               Expanded(
-                flex: 1,
+                flex: 2,
                 child: Center(
                   child: Container(
                     padding: const EdgeInsets.all(32),
@@ -120,7 +108,6 @@ class _LoginScreenState extends State<LoginScreen> {
                       ],
                     ),
                     width: 420,
-
                     child: SingleChildScrollView(
                       child: Form(
                         key: _formKey,
@@ -129,32 +116,27 @@ class _LoginScreenState extends State<LoginScreen> {
                           children: [
                             const Text(
                               "Sign in",
-                              textAlign: TextAlign.left,
                               style: TextStyle(
                                 fontSize: 26,
                                 fontWeight: FontWeight.bold,
                                 color: Color(0xFF2A2A2A),
                               ),
                             ),
-
                             const SizedBox(height: 30),
 
-                            // ✅ EMAIL
+                            // EMAIL
                             TextFormField(
                               controller: emailCtrl,
-                              style: const TextStyle(color: Colors.black),
                               decoration: InputDecoration(
                                 labelText: 'Email',
-                                labelStyle:
-                                    const TextStyle(color: Colors.black54),
+                                labelStyle: const TextStyle(color: Colors.black54),
                                 enabledBorder: OutlineInputBorder(
                                   borderSide: BorderSide(
                                       color: Colors.grey.shade400, width: 1),
                                 ),
                                 focusedBorder: const OutlineInputBorder(
                                   borderSide: BorderSide(
-                                      color: Color.fromARGB(255, 16, 17, 21),
-                                      width: 1.6),
+                                      color: Colors.black, width: 1.6),
                                 ),
                               ),
                               validator: (value) {
@@ -167,26 +149,22 @@ class _LoginScreenState extends State<LoginScreen> {
                                 return null;
                               },
                             ),
-
                             const SizedBox(height: 16),
 
-                            // ✅ PASSWORD
+                            // PASSWORD
                             TextFormField(
                               controller: passwordCtrl,
                               obscureText: true,
-                              style: const TextStyle(color: Colors.black),
                               decoration: InputDecoration(
                                 labelText: 'Password',
-                                labelStyle:
-                                    const TextStyle(color: Colors.black54),
+                                labelStyle: const TextStyle(color: Colors.black54),
                                 enabledBorder: OutlineInputBorder(
                                   borderSide: BorderSide(
                                       color: Colors.grey.shade400, width: 1),
                                 ),
                                 focusedBorder: const OutlineInputBorder(
                                   borderSide: BorderSide(
-                                      color: Color.fromARGB(255, 2, 2, 3),
-                                      width: 1.6),
+                                      color: Colors.black, width: 1.6),
                                 ),
                               ),
                               validator: (value) {
@@ -199,7 +177,6 @@ class _LoginScreenState extends State<LoginScreen> {
                                 return null;
                               },
                             ),
-
                             const SizedBox(height: 14),
 
                             Align(
@@ -212,17 +189,16 @@ class _LoginScreenState extends State<LoginScreen> {
                                 ),
                               ),
                             ),
-
                             const SizedBox(height: 20),
 
-                            // ✅ LOGIN BUTTON
+                            // LOGIN BUTTON
                             loading
                                 ? const Center(child: CircularProgressIndicator())
                                 : Container(
                                     decoration: BoxDecoration(
                                       gradient: const LinearGradient(
                                         colors: [
-                                          Color.fromARGB(255, 4, 4, 5),
+                                          Colors.black,
                                           Color.fromARGB(255, 54, 55, 63),
                                         ],
                                         begin: Alignment.topLeft,
@@ -250,10 +226,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                       ),
                                     ),
                                   ),
-
                             const SizedBox(height: 16),
 
-                            // ✅ REGISTER
+                            // REGISTER
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
@@ -265,18 +240,17 @@ class _LoginScreenState extends State<LoginScreen> {
                                   onPressed: () => Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (_) => const RegisterScreen(),
-                                    ),
+                                        builder: (_) => const RegisterScreen()),
                                   ),
                                   child: const Text(
                                     "Sign up",
                                     style: TextStyle(
-                                      color: Color.fromARGB(255, 5, 5, 6),
+                                      color: Colors.black,
                                     ),
                                   ),
                                 ),
                               ],
-                            )
+                            ),
                           ],
                         ),
                       ),
@@ -291,3 +265,13 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 }
+
+// Example movie poster URLs
+final List<String> moviePosters = [
+  'https://m.media-amazon.com/images/I/71niXI3lxlL._AC_SY679_.jpg',
+  'https://m.media-amazon.com/images/I/81p+xe8cbnL._AC_SY679_.jpg',
+  'https://m.media-amazon.com/images/I/91qvVq8tCQL._AC_SY679_.jpg',
+  'https://m.media-amazon.com/images/I/81Evoyz6fNL._AC_SY679_.jpg',
+  'https://m.media-amazon.com/images/I/71niXI3lxlL._AC_SY679_.jpg',
+  'https://m.media-amazon.com/images/I/81p+xe8cbnL._AC_SY679_.jpg',
+];
